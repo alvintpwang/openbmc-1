@@ -9,12 +9,20 @@ DEPENDS += "virtual/obmc-gpio-monitor"
 RDEPENDS_${PN} += "virtual/obmc-gpio-monitor"
 
 S = "${WORKDIR}"
-SRC_URI += "file://toggle_identify_led.sh"
+SRC_URI += " \
+        file://toggle_identify_led.sh \
+        file://99-gpio-keys.rules \
+        "
 
 do_install() {
         install -d ${D}${bindir}
         install -m 0755 ${WORKDIR}/toggle_identify_led.sh \
             ${D}${bindir}/toggle_identify_led.sh
+}
+
+do_install_append_mihawk() {
+        install -d ${D}${base_libdir}/udev/rules.d/
+        install ${WORKDIR}/99-gpio-keys.rules ${D}${base_libdir}/udev/rules.d/
 }
 
 SYSTEMD_ENVIRONMENT_FILE_${PN} +="obmc/gpio/id_button"
@@ -27,4 +35,4 @@ TGT = "multi-user.target"
 FMT = "../${TMPL}:${TGT}.requires/${INSTFMT}"
 
 SYSTEMD_SERVICE_${PN} += "id-button-pressed.service"
-SYSTEMD_LINK_${PN} += "${@compose_list(d, 'FMT', 'ID_BUTTON_SERVICE')}"
+SYSTEMD_LINK_${PN}__append_ibm-ac-server += "${@compose_list(d, 'FMT', 'ID_BUTTON_SERVICE')}"
