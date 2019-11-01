@@ -1,5 +1,9 @@
 [Unit]
 Description=Phosphor GPIO %I monitor
+Requires=sys-devices-platform-gpio\x2dkeys-input-input2-event1.device
+After=sys-devices-platform-gpio\x2dkeys-input-input2-event1.device
+Requires=sys-devices-platform-gpio\x2dkeys\x2dpolled-input-input1-event0.device
+After=sys-devices-platform-gpio\x2dkeys\x2dpolled-input-input1-event0.device
 
 [Service]
 Restart=no

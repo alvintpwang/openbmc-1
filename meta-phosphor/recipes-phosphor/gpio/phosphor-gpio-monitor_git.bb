@@ -35,8 +35,16 @@ SYSTEMD_SERVICE_${PN}-presence += "phosphor-gpio-presence@.service"
 
 FILES_${PN}-monitor += "${bindir}/phosphor-gpio-monitor"
 FILES_${PN}-monitor += "${bindir}/phosphor-gpio-util"
+FILES_${PN}-monitor += "${base_libdir}/udev/rules.d/99-gpio-keys.rules"
 FILES_${PN}-presence += "${bindir}/phosphor-gpio-presence"
 
 SRC_URI += "git://github.com/openbmc/phosphor-gpio-monitor"
 SRCREV = "206f0040985e27a0651a9164d7958bf347142a31"
 S = "${WORKDIR}/git"
+
+SRC_URI += "file://99-gpio-keys.rules"
+
+do_install_append() {
+    install -d ${D}/${base_libdir}/udev/rules.d
+    install -m 0644 ${WORKDIR}/99-gpio-keys.rules ${D}/${base_libdir}/udev/rules.d
+}
